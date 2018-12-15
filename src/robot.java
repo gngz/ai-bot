@@ -1,28 +1,22 @@
 import lejos.utility.Delay;
 import lejos.hardware.Button;
-import lejos.hardware.sensor.*;
-import lejos.robotics.Color;
-import lejos.robotics.RegulatedMotor;
-import lejos.hardware.motor.*;
-import lejos.hardware.port.MotorPort;
-import lejos.hardware.port.SensorPort;
 import lejos.hardware.lcd.*;
-import lejos.ev3.*;
-import java.util.Random;
-
-
-import lejos.robotics.SampleProvider;
+import lejos.robotics.Color;
 
 
 
 
 
-public class robot {
+
+
+public class Robot {
 	
 	
 	static Navigation.Direction robot_dir = Navigation.Direction.NORTH;
-	static Position robot_pos = new Position(0,0);
-	static Navigation robot_nav = new Navigation(robot_pos,robot_dir);
+	static Position robot_pos = new Position(1,1);
+	static Navigation robot_nav = new Navigation(robot_pos,robot_dir,6);
+	static final Position moto_pos = new Position(6,6);
+	
 	
 
 	public static void main(String[] args) {
@@ -30,7 +24,34 @@ public class robot {
 
 		
 		Motion.initialize();
-		System.out.println("Click any button to start! v1");
+		System.out.printf("   SUViVOR BOT   \n\n");
+		System.out.printf("Click any button to start!");
+		Button.waitForAnyPress();
+		run();
+
+	
+	}
+	
+	public static void run()
+	{
+		//Motion.moveForward(false,5);
+		demo();
+		while(true)
+		{
+			Button.waitForAnyPress();
+			Motion.shot();
+		}
+		//verifyAction();
+
+	
+		
+	}
+	
+	
+
+	
+	static void demo()
+	{
 		boolean grab_isopen = true;
 		while(true) {
 			int button = Button.waitForAnyPress();
@@ -41,12 +62,12 @@ public class robot {
 				case Button.ID_UP:
 					Delay.msDelay(1000);
 					if(robot_nav.move(1))
-						Motion.moveForward();
+						Motion.moveForward(false);
 					break;
 				case Button.ID_DOWN:
 					Delay.msDelay(1000);
 					if(robot_nav.move(-1))
-						Motion.moveForward(-1);
+						Motion.moveForward(false,-1);
 					break;
 				case Button.ID_LEFT:
 					Delay.msDelay(1000);
@@ -75,51 +96,51 @@ public class robot {
 			
 			System.out.printf("POS(%d,%d) D=%s\n",robot_pos.getX(),robot_pos.getY(),robot_nav.getDir().name());
 		}
-		
-		
-		
-		
-
-		//Motion.moveForward(2);
-		//verificar();
-		//Button.waitForAnyPress();
-		
-		
-		
-		
-
-	
-
-
-	
 	}
 	
-	public static void verificar()
+	static void waitTurn()
 	{
-		final int max = 35,min =10;
-		int d;
-		int[] ad = new int[4];
-		 
-		for(int i=0;i<4;i++)
+		LCD.clear();
+		
+		System.out.printf("Waiting my Turn!\n\n");
+		
+		System.out.printf("Press ENTER to start my turn.");;
+		while(Button.waitForAnyPress() != Button.ID_ENTER);
+		
+		
+	}
+	
+	public static void verifyAction()
+	{
+		
+		int dis = Motion.getDistance();
+		
+		if(dis >= 20 && dis <= 30)
 		{
-			Delay.msDelay(3000);
-			d =Motion.getDistance();
-			
-			if((d <= max) && (d >= min))
-			{
-				ad[i]=1;
-			}
-			else
-			{
-				ad[i]=0;
-			}
-			
-			System.out.println("AD["+i+"]:"+ad[i]+ " - d:"+d);
-			
-			
-			Motion.turn(Motion.side.LEFT);
+			Motion.moveUntilObject(false);
+			System.out.printf("Color:%d \n",Motion.getColor(Motion.ColorSensor.TOP));
+			Motion.moveUntilDistance(dis, true);
+		}
+		Motion.turn(Motion.side.RIGHT);
+		dis = Motion.getDistance();
+		if(dis >= 20 && dis <= 30)
+		{
+			Motion.moveUntilObject(false);
+			System.out.printf("Color:%d \n",Motion.getColor(Motion.ColorSensor.TOP));
+			Motion.moveUntilDistance(dis, true);
+		}
+		Motion.turn(Motion.side.LEFT);
+		Motion.turn(Motion.side.LEFT);
+		dis = Motion.getDistance();
+		if(dis >= 20 && dis <= 30)
+		{
+			Motion.moveUntilObject(false);
+			System.out.printf("Color:%d \n",Motion.getColor(Motion.ColorSensor.TOP));
+			Motion.moveUntilDistance(dis, true);
+
 		}
 		
+		Motion.turn(Motion.side.RIGHT);
 		
 		
 		

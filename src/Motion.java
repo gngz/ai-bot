@@ -1,3 +1,6 @@
+import java.io.File;
+
+import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.MotorPort;
@@ -8,19 +11,19 @@ import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
 
+
 public class Motion {
 
-	//private final static double STEP_FORWARD_ROT = 3.2;
-	//private final static double TURN_ROT =1.2;
-	
-	private final static double STEP_FORWARD_ROT = -2.55;
-	private final static double TURN_ROT =-0.83;
-	private final static int GRAB_CLOSED_ANGLE = 180;
-	private final static int GRAB_OPEN_ANGLE = -180;
-	private final static int TURN_SPEED = 200;
-	private final static int NORMAL_SPEED = 300;
 
 	
+	private final static double STEP_FORWARD_ROT = -2.55;		// Number of rotations to advance one step
+	private final static double TURN_ROT =-0.85;				// Number of rotations for turning
+	private final static int GRAB_CLOSED_ANGLE = 180;
+	private final static int GRAB_OPEN_ANGLE = -180;			
+	private final static int TURN_SPEED = 200;					// Speed in turns
+	private final static int NORMAL_SPEED = 250;				// Normal speed
+	private final static int OBJECT_THRESHOLD = 15;				// Distance from Distance Sensor to an Object be in bottom of top color sensor (in cm).
+	private final static int CATCH_THRESHOLD = 5;
 	
 	// Motors Declarations
 	private static RegulatedMotor motorLeft = new EV3LargeRegulatedMotor(MotorPort.C);
@@ -29,18 +32,20 @@ public class Motion {
 	
 	// Sensors Declarations
 	private static EV3UltrasonicSensor distanceSensor = new EV3UltrasonicSensor(SensorPort.S2);
-	
 	private static EV3ColorSensor bottomColorSensor = new EV3ColorSensor(SensorPort.S1);
 	private static EV3ColorSensor topColorSensor = new EV3ColorSensor(SensorPort.S3);
 	
 	
-	public enum colorSensor {TOP,BOTTOM};
+	
+	// Util Enums
+	public enum ColorSensor {TOP,BOTTOM};
 	public enum side {LEFT ,RIGHT };
 	
 
 	
 	public static void initialize()
 	{
+	
 		
 		motorLeft.setAcceleration(500);
 		motorRight.setAcceleration(500);
@@ -50,19 +55,54 @@ public class Motion {
 		motorLeft.synchronizeWith(new RegulatedMotor[] { motorRight });
 		motorLeft.flt();
 		motorRight.flt();
+		openGrab();
 		motorGrab.flt();
 	
 	}
 	
-	private static void rotate(double turns, boolean immediateReturn) {
+	private static void rotate(double turns, boolean immediateReturn,boolean catchSomething) {
 		motorLeft.resetTachoCount();
 		motorRight.resetTachoCount();
 		motorLeft.startSynchronization();
 		motorLeft.rotateTo((int) (turns * 360), immediateReturn);
 		motorRight.rotateTo((int) (turns * 360), immediateReturn);
 		motorLeft.endSynchronization();
-		while(motorLeft.isMoving());
+		while(motorLeft.isMoving())
+		{
+			if(catchSomething)
+			{
+
+				int d = Motion.getDistance();
+				if(d == CATCH_THRESHOLD)
+					closeGrab();
+			}
+		}
 		
+	}
+	
+	private static void move(boolean backward) 
+	{
+		motorLeft.startSynchronization();
+		if(backward)
+		{
+			motorLeft.forward();
+			motorRight.forward();
+		}
+		else
+		{
+			motorLeft.backward();
+			motorRight.backward();
+		}
+		motorLeft.endSynchronization();
+		
+	}
+	
+	private static void stop() 
+	{
+		motorLeft.startSynchronization();
+		motorLeft.stop();
+		motorRight.stop();
+		motorLeft.endSynchronization();
 	}
 	
 	private static void rotate(double turns, boolean immediateReturn,side s) {
@@ -89,13 +129,49 @@ public class Motion {
 		
 	}
 
-	public static void moveForward() {
+	public static void moveForward(boolean catchSomething) {
 		
-		rotate(STEP_FORWARD_ROT, true);
+		rotate(STEP_FORWARD_ROT, true,catchSomething);
 	}
 
-	public static void moveForward(int x) {
-		rotate(STEP_FORWARD_ROT*x, true);
+	public static void moveForward(boolean catchSomething,double x) {
+		rotate(STEP_FORWARD_ROT*x, true,catchSomething);
+	}
+	
+	public static void moveUntilObject(boolean backward)
+	{
+		motorLeft.setSpeed(TURN_SPEED);
+		motorRight.setSpeed(TURN_SPEED);
+		move(backward);
+		while(getDistance() > OBJECT_THRESHOLD);
+		stop();
+		motorLeft.setSpeed(NORMAL_SPEED);
+		motorRight.setSpeed(NORMAL_SPEED);
+		
+		
+	}
+	
+	public static void moveUntilDistance(int d,boolean backward)
+	{
+		motorLeft.setSpeed(TURN_SPEED);
+		motorRight.setSpeed(TURN_SPEED);
+		move(backward);
+		while(getDistance() != d);
+		stop();
+		motorLeft.setSpeed(NORMAL_SPEED);
+		motorRight.setSpeed(NORMAL_SPEED);
+		Delay.msDelay(500);
+	}
+	
+	public static void moveUntilColor(int c,boolean backward) {
+		
+		motorLeft.setSpeed(TURN_SPEED);
+		motorRight.setSpeed(TURN_SPEED);
+		move(backward);
+		while(getColor(ColorSensor.BOTTOM) != c);
+		stop();
+		motorLeft.setSpeed(NORMAL_SPEED);
+		motorRight.setSpeed(NORMAL_SPEED);
 	}
 
 	public static void turn(side s) {
@@ -119,22 +195,34 @@ public class Motion {
 		
 	}
 	
-	public static int getColor(colorSensor sensor) {
-		if(sensor == colorSensor.TOP)
+	public static int getColor(ColorSensor sensor) {
+		if(sensor == ColorSensor.TOP)
 			return topColorSensor.getColorID();
 		else
+
 			return bottomColorSensor.getColorID();
 	}
 
 	public static void openGrab() {
-		motorGrab.rotateTo(GRAB_OPEN_ANGLE);
+		motorGrab.rotateTo(-600, true);
+		motorGrab.waitComplete();
+		motorGrab.flt();
 		
 	}
 	
 	public static void closeGrab() {
-		motorGrab.rotateTo(GRAB_CLOSED_ANGLE);
-		
-		
+		motorGrab.rotateTo(600, true);
+		motorGrab.waitComplete();
+		motorGrab.flt();
 	}
+	
+	public static void shot()
+	{
+		
+		File gunshotWav = new File("/home/lejos/programs/gunshot.wav");
+		Sound.playSample(gunshotWav,100);
+	}
+	
+	
 	
 }

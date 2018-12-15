@@ -53,5 +53,12 @@ public class Position {
 		Position p = new Position(this.x + pos.x,this.y+pos.y);
 		return p;
 	}
+	
+	// Useful to calculate number of steps for a given position
+	public Position sub(Position pos)
+	{
+		Position p = new Position(this.x - pos.x,this.y - pos.y);
+		return p;
+	}
 
 }

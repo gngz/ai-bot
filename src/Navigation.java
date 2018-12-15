@@ -7,12 +7,13 @@ public class Navigation {
 	
 	private Direction dir;
 	private Position pos; // Position of robot.
-	
+	private int game_size;
 	
 
-	public Navigation(Position pos, Direction dir) {
+	public Navigation(Position pos, Direction dir, int size) {
 		this.pos = pos;
 		this.dir = dir;
+		this.game_size = size;
 	}
 	
 	public void rotateLeft() 
@@ -56,7 +57,7 @@ public class Navigation {
 		
 		}
 		
-		if(new_x >=0 && new_x < 6 && new_y >= 0 && new_y <6)
+		if(new_x >=1 && new_x <= game_size && new_y >= 1 && new_y <= game_size)
 		{
 			pos.setX(new_x);
 			pos.setY(new_y);
