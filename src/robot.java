@@ -2,17 +2,11 @@ import lejos.utility.Delay;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.*;
-import lejos.robotics.Color;
-
-
-
-
-
 
 
 public class Robot {
 	
-	
+	// Global Vars
 	static Navigation.Direction robot_dir = Navigation.Direction.NORTH;
 	static Position robot_pos = new Position(1,1);
 	static Navigation robot_nav = new Navigation(robot_pos,robot_dir,6);
@@ -21,14 +15,12 @@ public class Robot {
 	
 
 	public static void main(String[] args) {
-	
-
-		
+		// Printing the main message
 		Motion.initialize();
 		System.out.printf("   SUViVOR BOT   \n\n");
 		System.out.printf("Click any button to start!");
 		Button.waitForAnyPress();
-		run();
+		run();	// "Run" the game
 
 	
 	}

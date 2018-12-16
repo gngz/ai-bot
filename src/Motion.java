@@ -1,3 +1,10 @@
+/*
+ * Group 6 - Survival Bot
+ * Class Motion
+ * Robot Movements, Sounds and Sensor Data
+ * 
+ */
+
 import java.io.File;
 
 import lejos.hardware.Sound;
@@ -15,15 +22,15 @@ import lejos.utility.Delay;
 public class Motion {
 
 
-	
+	// Constants
 	private final static double STEP_FORWARD_ROT = -2.55;		// Number of rotations to advance one step
 	private final static double TURN_ROT =-0.85;				// Number of rotations for turning
-	private final static int GRAB_CLOSED_ANGLE = 180;
-	private final static int GRAB_OPEN_ANGLE = -180;			
+	private final static int GRAB_CLOSED_ANGLE = 180;			// not used
+	private final static int GRAB_OPEN_ANGLE = -180;			// not used
 	private final static int TURN_SPEED = 200;					// Speed in turns
 	private final static int NORMAL_SPEED = 250;				// Normal speed
 	private final static int OBJECT_THRESHOLD = 15;				// Distance from Distance Sensor to an Object be in bottom of top color sensor (in cm).
-	private final static int CATCH_THRESHOLD = 5;
+	private final static int CATCH_THRESHOLD = 5;				// Distance of the object to which the grab closes
 	
 	// Motors Declarations
 	private static RegulatedMotor motorLeft = new EV3LargeRegulatedMotor(MotorPort.C);
@@ -43,10 +50,11 @@ public class Motion {
 	
 
 	
+	// Initialization of motors
+	
 	public static void initialize()
 	{
 	
-		
 		motorLeft.setAcceleration(500);
 		motorRight.setAcceleration(500);
 		motorGrab.rotateTo(0);
@@ -59,6 +67,9 @@ public class Motion {
 		motorGrab.flt();
 	
 	}
+	
+	// Auxiliary Function to rotate wheels one amount of turns.
+	// if catchSomething is true, the grab will close if encounters an object in movement.
 	
 	private static void rotate(double turns, boolean immediateReturn,boolean catchSomething) {
 		motorLeft.resetTachoCount();
@@ -80,6 +91,8 @@ public class Motion {
 		
 	}
 	
+	// Auxiliary function to move robot without limit.
+	
 	private static void move(boolean backward) 
 	{
 		motorLeft.startSynchronization();
@@ -97,6 +110,9 @@ public class Motion {
 		
 	}
 	
+	
+	// Auxiliary function to stop robot
+	
 	private static void stop() 
 	{
 		motorLeft.startSynchronization();
@@ -105,6 +121,8 @@ public class Motion {
 		motorLeft.endSynchronization();
 	}
 	
+	
+	// Auxiliary Function to rotate wheels one amount of turns and steer for one side.
 	private static void rotate(double turns, boolean immediateReturn,side s) {
 		motorLeft.resetTachoCount();
 		motorRight.resetTachoCount();
@@ -128,15 +146,21 @@ public class Motion {
 		while(motorLeft.isMoving());
 		
 	}
+	
+	// Function to move forward one step.
 
 	public static void moveForward(boolean catchSomething) {
 		
 		rotate(STEP_FORWARD_ROT, true,catchSomething);
 	}
 
+	// Function to move forward x steps.
+
 	public static void moveForward(boolean catchSomething,double x) {
 		rotate(STEP_FORWARD_ROT*x, true,catchSomething);
 	}
+	
+	// Function to move robot until an object
 	
 	public static void moveUntilObject(boolean backward)
 	{
@@ -151,6 +175,8 @@ public class Motion {
 		
 	}
 	
+	// Function to move robot until a distance from distance sensor.
+	
 	public static void moveUntilDistance(int d,boolean backward)
 	{
 		motorLeft.setSpeed(TURN_SPEED);
@@ -163,6 +189,8 @@ public class Motion {
 		Delay.msDelay(500);
 	}
 	
+	// Move robot until a color
+	
 	public static void moveUntilColor(int c,boolean backward) {
 		
 		motorLeft.setSpeed(TURN_SPEED);
@@ -174,6 +202,8 @@ public class Motion {
 		motorRight.setSpeed(NORMAL_SPEED);
 	}
 
+	// Rotate robot to a side
+	
 	public static void turn(side s) {
 		motorLeft.setSpeed(TURN_SPEED);
 		motorRight.setSpeed(TURN_SPEED);
@@ -182,6 +212,8 @@ public class Motion {
 		motorRight.setSpeed(NORMAL_SPEED);
 	}
 	
+	
+	// get the distance from distance sensor
 	
 	public static int getDistance()
 	{
@@ -195,6 +227,8 @@ public class Motion {
 		
 	}
 	
+	// get color from color sensors
+	
 	public static int getColor(ColorSensor sensor) {
 		if(sensor == ColorSensor.TOP)
 			return topColorSensor.getColorID();
@@ -203,6 +237,8 @@ public class Motion {
 			return bottomColorSensor.getColorID();
 	}
 
+	
+	
 	public static void openGrab() {
 		motorGrab.rotateTo(-600, true);
 		motorGrab.waitComplete();
@@ -215,6 +251,8 @@ public class Motion {
 		motorGrab.waitComplete();
 		motorGrab.flt();
 	}
+	
+	// Play a shot sound
 	
 	public static void shot()
 	{

@@ -1,21 +1,32 @@
+/*
+ *  Group 6 - Survival Bot
+ *  Navigation Class
+ *  Class that helps navigation
+ * 
+ */
 
 public class Navigation {
+	
+	// Util enums
 	
 	public enum Direction {NORTH,EAST,WEST,SOUTH};
 	public enum Side {RIGHT, LEFT};
 	
-	
+	// Instance Variables
 	private Direction dir;
 	private Position pos; // Position of robot.
 	private int game_size;
 	
-
+	
+	// Constructor
 	public Navigation(Position pos, Direction dir, int size) {
 		this.pos = pos;
 		this.dir = dir;
 		this.game_size = size;
 	}
 	
+	
+	// Auxiliary function to get the right direction of another direction.
 	
 	private Direction right(Direction dir)
 	{
@@ -35,7 +46,7 @@ public class Navigation {
 		}
 	}
 	
-	
+	// Auxiliary function to get the left direction of another direction.
 	private Direction left(Direction dir)
 	{
 		switch(dir)
@@ -54,6 +65,7 @@ public class Navigation {
 		}
 	}
 	
+	// Saves the new direction (Left of current direction).
 	public void rotateLeft() 
 	{
 		switch(this.dir)
@@ -74,6 +86,7 @@ public class Navigation {
 		}
 	}
 	
+	// Verify if movement is possible (forward or backward)
 	public boolean verify(int steps)
 	{
 		int new_x = pos.getX(), new_y = pos.getY();
@@ -102,6 +115,7 @@ public class Navigation {
 		
 	}
 	
+	// Verify if movement its possible, x steps to a side.
 	public boolean verify(int steps,Side s)
 	{
 		int new_x = pos.getX(), new_y = pos.getY();
@@ -147,6 +161,9 @@ public class Navigation {
 		
 	}
 	// return true if movement is possible and updates position, if not movement is not possible return false.
+	
+	
+	// Verify if movement its possible (forward and backwards), if possible saves the position.
 	public boolean move(int steps)
 	{
 		int new_x = pos.getX(), new_y = pos.getY();
@@ -178,6 +195,7 @@ public class Navigation {
 		
 	}
 	
+	// Saves the new direction (Right of current direction).
 	public void rotateRight()
 	{
 		switch(this.dir)
@@ -198,6 +216,8 @@ public class Navigation {
 		}
 	}
 	
+	
+	// Get current direction of robot
 	public Direction getDir()
 	{
 		return this.dir;
