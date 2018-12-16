@@ -219,7 +219,7 @@ public class Motion {
 	public static void shot()
 	{
 		
-		File gunshotWav = new File("/home/lejos/programs/gunshot.wav");
+		File gunshotWav = new File("/home/lejos/programs/sounds/gunshot.wav");
 		Sound.playSample(gunshotWav,100);
 	}
 	
