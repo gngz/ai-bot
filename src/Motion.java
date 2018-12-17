@@ -24,7 +24,7 @@ public class Motion {
 
 	// Constants
 	private final static double STEP_FORWARD_ROT = -2.55;		// Number of rotations to advance one step
-	private final static double TURN_ROT =-0.85;				// Number of rotations for turning
+	private final static double TURN_ROT =-0.86;				// Number of rotations for turning
 	private final static int GRAB_CLOSED_ANGLE = 180;			// not used
 	private final static int GRAB_OPEN_ANGLE = -180;			// not used
 	private final static int TURN_SPEED = 200;					// Speed in turns
@@ -261,6 +261,17 @@ public class Motion {
 		Sound.playSample(gunshotWav,100);
 	}
 	
+	public static void punch()
+	{
+		File punchWav = new File("/home/lejos/programs/sounds/punch.wav");
+		Sound.playSample(punchWav,100);
+	}
+	
+	public static void bulletSound()
+	{
+		File bulletWav = new File("/home/lejos/programs/sounds/bullet.wav");
+		Sound.playSample(bulletWav,100);
+	}
 	
 	
 }
