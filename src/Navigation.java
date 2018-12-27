@@ -10,7 +10,7 @@ public class Navigation {
 	// Util enums
 	
 	public enum Direction {NORTH,EAST,WEST,SOUTH};
-	public enum Side {RIGHT, LEFT};
+	public enum Side {RIGHT, LEFT,FRONT,BACK};
 	
 	// Instance Variables
 	private Direction dir;
@@ -222,5 +222,11 @@ public class Navigation {
 	{
 		return this.dir;
 	}
+	
+	public Position getPosition()
+	{
+		return new Position(pos.getX(),pos.getY());
+	}
+	
 
 }

@@ -80,5 +80,30 @@ public class Position {
 		Position p = new Position(this.x - pos.x,this.y - pos.y);
 		return p;
 	}
+	
+	int calcutateDirectDistance(int x, int y)	//maybe double
+	{
+		int steps;
+		
+		steps = Math.abs(this.x - x) + Math.abs(this.y - y);
+		
+		return steps;
+	}
+	
+	public boolean equals(Object o) { 
+        if(o == this) return true;
+        else if(!(o instanceof Position)) return false;
+        else
+        {
+            int x = ((Position) o).getX();
+            int y = ((Position) o).getY();
+            if(x == this.x && y == this.y)
+                return true;
+            return false;
+        }            
+        
+    }
+	
+
 
 }

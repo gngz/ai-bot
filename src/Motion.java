@@ -24,7 +24,7 @@ public class Motion {
 
 	// Constants
 	private final static double STEP_FORWARD_ROT = -2.55;		// Number of rotations to advance one step
-	private final static double TURN_ROT =-0.86;				// Number of rotations for turning
+	private final static double TURN_ROT =-0.89;				// Number of rotations for turning
 	private final static int GRAB_CLOSED_ANGLE = 180;			// not used
 	private final static int GRAB_OPEN_ANGLE = -180;			// not used
 	private final static int TURN_SPEED = 200;					// Speed in turns
