@@ -9,5 +9,5 @@ Made by:
  - Joel Remesso
 
 
-* [ ]  Phase 1 - Minimal Movements
-* [ ]  Phase 2 - Final Project
+* [*]  Phase 1 - Minimal Movements
+* [*]  Phase 2 - Final Project
