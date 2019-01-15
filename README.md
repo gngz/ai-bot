@@ -1,5 +1,5 @@
 # Survivor Bot
-Survivor bot is the project of Artificial Intelligence Course of University of Madeira - Year 2018/2019
+Survivor bot is the project of Artificial Intelligence Course at University of Madeira - Year 2018/2019
 
 Made by:
  - Gonçalo Passos
@@ -7,3 +7,7 @@ Made by:
  - Alexandru Borta
  - Duarte Marco
  - Joel Remesso
+
+
+* [ ]  Phase 1 - Minimal Movements
+* [ ]  Phase 2 - Final Project
