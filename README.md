@@ -14,7 +14,7 @@ Made by:
 > With this heuristic function is possible make the robot be able to move with minimum number of steps and privilege the movement by the center when robot can't go by the shortest path. 
 
 
-$`f(x) = a_0 * d(x) +  a_1 * c(x)`$ is the heuristic function.
+$`h(x) = a_0 * d(x) +  a_1 * c(x)`$ is the heuristic function.
 
 $`d(x) = ABS(x_1 - x_2) + ABS(y_1 - y_2) `$ is the minimal number of steps between testing point and objective point.
 
