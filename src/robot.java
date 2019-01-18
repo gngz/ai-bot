@@ -70,6 +70,7 @@ public class Robot {
 			removeByObjType(possible_turns, TurnStruct.Objects.ZOMBIE); // Remove Zombie from possible turn
 			removeByObjType(possible_turns, TurnStruct.Objects.ZOMBIE_PART); // Remove Zombie with Part from possible
 			removeBySmell(possible_turns, SMELL1);
+			removeBySmell(possible_turns, SMELL3);	// Patch
 
 			// Corner special cases TODO: TEST!!!!
 			if (isInCorner() && smell == SMELL3) {	// if is in a corner position and the smell in current position is 1 and 2 (same time).
@@ -209,7 +210,7 @@ public class Robot {
 						robot_nav.move(1);
 						Motion.moveForward(false);
 					}
-				} else if (temp_bullet != null && temp_bullet.smell != SMELL1) {	// Else if have a bullet, grab the bullet
+				} else if (temp_bullet != null && temp_bullet.smell != SMELL1  && temp_bullet.smell != SMELL3)  {	// Else if have a bullet, grab the bullet
 					rotateTo(robot_nav, temp_bullet.dir);
 					robot_nav.move(1);
 					Motion.moveForward(false);
@@ -336,7 +337,7 @@ public class Robot {
 				// Grab Something or move
 				if(!already_moved)	// If not already moved
 				{
-					if (temp_bullet != null && temp_bullet.smell != SMELL1) // If there is a bullet and the smell in bullet position is not smell1, then grab
+					if (temp_bullet != null && temp_bullet.smell != SMELL1  && temp_bullet.smell != SMELL3) // If there is a bullet and the smell in bullet position is not smell1, then grab
 					{
 						rotateTo(robot_nav, temp_bullet.dir);
 						robot_nav.move(1);
@@ -345,7 +346,7 @@ public class Robot {
 						Motion.openGrab();
 						has_bullet = true;
 
-					} else if (!has_object && temp_part != null && temp_part.smell != SMELL1) { // Else if, has one object and no smell1 in object position, then grab
+					} else if (!has_object && temp_part != null && temp_part.smell != SMELL1 && temp_part.smell != SMELL3) { // Else if, has one object and no smell1 in object position, then grab
 						rotateTo(robot_nav, temp_part.dir);
 						robot_nav.move(1);
 						Motion.moveForward(true);
